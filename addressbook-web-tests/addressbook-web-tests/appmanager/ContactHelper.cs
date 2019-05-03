@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using aWebAddressbookTests;
 using NUnit.Framework;
@@ -13,8 +14,20 @@ namespace WebAddressbookTests
 {
     public class ContactHelper : HelperBase
     {
+        private bool acceptNextAlert;
 
         public ContactHelper(ApplicationManager manager) : base(manager) { }
+
+        public ContactHelper Modify(int v, ContactsData newData)
+        {
+            manager.Navigator.GoToHomePage();
+            SelectContact(v);
+            InitContactModification();
+            FillContactForm(newData);
+            SubmitContactModification();
+            manager.Auth.LogOut();
+            return this;
+        }
 
         public ContactHelper Create()
         {
@@ -24,6 +37,16 @@ namespace WebAddressbookTests
             manager.Auth.LogOut();
             return this;
         }
+
+        public ContactHelper Remove(int v)
+        {
+            manager.Navigator.GoToHomePage();
+            SelectContact(v);
+            RemoveContact();
+            manager.Auth.LogOut();
+            return this;
+        }
+
         public ContactHelper AddNewContact()
         {
             driver.FindElement(By.LinkText("add new")).Click();
@@ -67,6 +90,55 @@ namespace WebAddressbookTests
         {
             driver.FindElement(By.XPath("(//input[@name='submit'])[2]")).Click();
             return this;
+        }
+        public ContactHelper SelectContact(int v)
+        {
+            IWebElement baseTable = driver.FindElement(By.Id("maintable"));
+            var tableRows = baseTable.FindElements(By.TagName("tr"));
+            var checkbox = tableRows[v].FindElement(By.Name("selected[]"));
+            checkbox.Click();
+            return this;
+        }
+        public ContactHelper SubmitContactModification()
+        {
+            driver.FindElement(By.Name("update")).Click();
+            return this;
+        }
+
+        public ContactHelper InitContactModification()
+        {
+            driver.FindElement(By.CssSelector("img[alt=\"Edit\"]")).Click();
+            return this;
+        }
+
+        public ContactHelper RemoveContact()
+        {
+            acceptNextAlert = true;
+            driver.FindElement(By.XPath("//input[@value='Delete']")).Click();
+            Assert.IsTrue(Regex.IsMatch(CloseAlertAndGetItsText(), "^Delete 1 addresses[\\s\\S]$"));
+            return this;
+        }
+        private string CloseAlertAndGetItsText()
+        {
+            try
+            {
+                IAlert alert = driver.SwitchTo().Alert();
+                string alertText = alert.Text;
+                if (acceptNextAlert)
+                {
+                    alert.Accept();
+                }
+                else
+                {
+                    alert.Dismiss();
+                }
+                return alertText;
+            }
+            finally
+            {
+                acceptNextAlert = true;
+            }
+
         }
     }
 }

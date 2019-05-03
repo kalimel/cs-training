@@ -53,6 +53,6 @@ namespace WebAddressbookTests
             {
                 this.footer = footer;
             }
-        }
+        } 
     }
 }

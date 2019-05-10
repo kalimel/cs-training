@@ -33,20 +33,15 @@ namespace WebAddressbookTests
             return this;
         }
 
-        private bool HasGroups()
+        public bool HasGroups()
         {
+            manager.Navigator.GoToGroupsPage();
             return IsElementPresent(By.ClassName("group"));
         }
 
         public GroupHelper Remove(int v)
         {
             manager.Navigator.GoToGroupsPage();
-            if (!HasGroups())
-            {
-                CreateWhithoutLogOut(new GroupData("g_name", "g_header", "g_footer"));
-                manager.Navigator.GoToGroupsPage();
-            }
-
             SelectGroup(v);
             RemoveGroup();
             manager.Auth.LogOut();
@@ -56,12 +51,6 @@ namespace WebAddressbookTests
         public GroupHelper Modify(int v, GroupData newData)
         {
             manager.Navigator.GoToGroupsPage();
-            if (!HasGroups())
-            {
-                CreateWhithoutLogOut(new GroupData("g_name", "g_header", "g_footer"));
-                manager.Navigator.GoToGroupsPage();
-            }
-
             SelectGroup(v);
             InitGroupModification();
             FillGroupForm(newData);

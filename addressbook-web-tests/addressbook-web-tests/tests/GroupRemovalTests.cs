@@ -13,6 +13,11 @@ namespace WebAddressbookTests
         [Test]
         public void GroupRemovalTest()
         {
+            if (!app.Groups.HasGroups())
+            {
+                app.Groups.CreateWhithoutLogOut(new GroupData("g_name", "g_header", "g_footer"));
+            }
+
             app.Groups.Remove(1);
         }
     }

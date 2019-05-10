@@ -21,11 +21,6 @@ namespace WebAddressbookTests
         public ContactHelper Modify(int v, ContactsData newData)
         {
             manager.Navigator.GoToHomePage();
-            if (!HasContacts())
-            {
-                CreateWhithoutLogOut();
-                manager.Navigator.GoToHomePage();
-            }
             InitContactModification(v);
             FillContactForm(newData);
             SubmitContactModification();
@@ -33,13 +28,15 @@ namespace WebAddressbookTests
             return this;
         }
 
-        private bool HasContacts()
+        public bool HasContacts()
         {
+            manager.Navigator.GoToHomePage();
             return driver.FindElement(By.Id("maintable")).FindElements(By.TagName("tr")).Count > 1;
         }
 
         public ContactHelper Create()
         {
+            manager.Navigator.GoToHomePage();
             AddNewContact();
             FillContactForm(new ContactsData("firstname", "lastname"));
             SubmitContactCreation();
@@ -49,6 +46,7 @@ namespace WebAddressbookTests
 
         public ContactHelper CreateWhithoutLogOut()
         {
+            manager.Navigator.GoToHomePage();
             AddNewContact();
             FillContactForm(new ContactsData("firstname", "lastname"));
             SubmitContactCreation();
@@ -58,11 +56,6 @@ namespace WebAddressbookTests
         public ContactHelper Remove(int v)
         {
             manager.Navigator.GoToHomePage();
-            if (!HasContacts())
-            {
-                CreateWhithoutLogOut();
-                manager.Navigator.GoToHomePage();
-            }
             SelectContact(v);
             RemoveContact();
             manager.Auth.LogOut();

@@ -13,6 +13,11 @@ namespace WebAddressbookTests
         [Test]
         public void ContactRemovalTest()
         {
+            if (!app.Contacts.HasContacts())
+            {
+                app.Contacts.CreateWhithoutLogOut();
+            }
+
             app.Contacts.Remove(1);                                                                                                        
         }
     }

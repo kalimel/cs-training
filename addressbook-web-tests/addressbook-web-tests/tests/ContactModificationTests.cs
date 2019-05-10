@@ -13,7 +13,12 @@ namespace WebAddressbookTests
         [Test]
         public void ContactModificationTest()
         {
-            ContactsData newData = new ContactsData("mmm", "mmm");
+            if (!app.Contacts.HasContacts())
+            {
+                app.Contacts.CreateWhithoutLogOut();
+            }
+
+            ContactsData newData = new ContactsData("namemmm", "lastnamemmm");
             app.Contacts.Modify(1, newData);
         }
     }

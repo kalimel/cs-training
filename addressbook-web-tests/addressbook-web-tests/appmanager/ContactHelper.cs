@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using aWebAddressbookTests;
+using WebAddressbookTests;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
@@ -21,11 +21,21 @@ namespace WebAddressbookTests
         public ContactHelper Modify(int v, ContactsData newData)
         {
             manager.Navigator.GoToHomePage();
+            if (!HasContacts())
+            {
+                CreateWhithoutLogOut();
+                manager.Navigator.GoToHomePage();
+            }
             InitContactModification(v);
             FillContactForm(newData);
             SubmitContactModification();
             manager.Auth.LogOut();
             return this;
+        }
+
+        private bool HasContacts()
+        {
+            return driver.FindElement(By.Id("maintable")).FindElements(By.TagName("tr")).Count > 1;
         }
 
         public ContactHelper Create()
@@ -37,9 +47,22 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public ContactHelper CreateWhithoutLogOut()
+        {
+            AddNewContact();
+            FillContactForm(new ContactsData("firstname", "lastname"));
+            SubmitContactCreation();
+            return this;
+        }
+
         public ContactHelper Remove(int v)
         {
             manager.Navigator.GoToHomePage();
+            if (!HasContacts())
+            {
+                CreateWhithoutLogOut();
+                manager.Navigator.GoToHomePage();
+            }
             SelectContact(v);
             RemoveContact();
             manager.Auth.LogOut();
@@ -53,36 +76,16 @@ namespace WebAddressbookTests
         }
         public ContactHelper FillContactForm(ContactsData contact)
         {
-            driver.FindElement(By.Name("firstname")).Click();
-            driver.FindElement(By.Name("firstname")).Clear();
-            driver.FindElement(By.Name("firstname")).SendKeys(contact.Firstname);
-            driver.FindElement(By.Name("lastname")).Click();
-            driver.FindElement(By.Name("lastname")).Clear();
-            driver.FindElement(By.Name("lastname")).SendKeys(contact.Lastname);
-            driver.FindElement(By.Name("title")).Click();
-            driver.FindElement(By.Name("title")).Clear();
-            driver.FindElement(By.Name("title")).SendKeys("title");
-            driver.FindElement(By.Name("company")).Click();
-            driver.FindElement(By.Name("company")).Clear();
-            driver.FindElement(By.Name("company")).SendKeys("company");
-            driver.FindElement(By.Name("address")).Click();
-            driver.FindElement(By.Name("address")).Clear();
-            driver.FindElement(By.Name("address")).SendKeys("address");
-            driver.FindElement(By.Name("home")).Click();
-            driver.FindElement(By.Name("home")).Clear();
-            driver.FindElement(By.Name("home")).SendKeys("home");
-            driver.FindElement(By.Name("mobile")).Click();
-            driver.FindElement(By.Name("mobile")).Clear();
-            driver.FindElement(By.Name("mobile")).SendKeys("mobile");
-            driver.FindElement(By.Name("work")).Click();
-            driver.FindElement(By.Name("work")).Clear();
-            driver.FindElement(By.Name("work")).SendKeys("work");
-            driver.FindElement(By.Name("email")).Click();
-            driver.FindElement(By.Name("email")).Clear();
-            driver.FindElement(By.Name("email")).SendKeys("email");
-            driver.FindElement(By.Name("homepage")).Click();
-            driver.FindElement(By.Name("homepage")).Clear();
-            driver.FindElement(By.Name("homepage")).SendKeys("homepage");
+            Type(By.Name("firstname"), contact.Firstname);
+            Type(By.Name("lastname"), contact.Lastname);
+            Type(By.Name("title"), "title");
+            Type(By.Name("company"), "company");
+            Type(By.Name("address"), "address");
+            Type(By.Name("home"), "home");
+            Type(By.Name("mobile"), "mobile");
+            Type(By.Name("work"), "work");
+            Type(By.Name("email"), "email");
+            Type(By.Name("homepage"), "homepage");
             return this;
         }
         public ContactHelper SubmitContactCreation()

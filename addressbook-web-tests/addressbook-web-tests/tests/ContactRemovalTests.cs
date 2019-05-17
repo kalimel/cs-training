@@ -15,10 +15,25 @@ namespace WebAddressbookTests
         {
             if (!app.Contacts.HasContacts())
             {
-                app.Contacts.CreateWhithoutLogOut();
+                app.Contacts.CreateWhithoutLogOut(new ContactsData("namemmm12", "lastnamemmm33"));
             }
 
-            app.Contacts.Remove(1);                                                                                                        
+            List<ContactsData> oldContacts = app.Contacts.GetContactList();
+            app.Contacts.Remove(0);
+
+            int newCount = app.Contacts.GetContactsCount();
+
+            Assert.AreEqual(oldContacts.Count - 1, newCount);
+            List<ContactsData> newContacts = app.Contacts.GetContactList();
+
+            ContactsData toBeRemoved = oldContacts[0];
+            oldContacts.RemoveAt(0);
+            Assert.AreEqual(oldContacts, newContacts);
+
+            foreach (ContactsData contact in newContacts)
+            {
+                Assert.AreNotEqual(contact.Id, toBeRemoved.Id);
+            }
         }
     }
 }

@@ -60,6 +60,7 @@ namespace WebAddressbookTests
             manager.Navigator.GoToHomePage();
             SelectContact(v);
             RemoveContact();
+            driver.FindElement(By.CssSelector("div.msgbox"));
             manager.Navigator.GoToHomePage();
             return this;
         }

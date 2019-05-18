@@ -50,6 +50,7 @@ namespace WebAddressbookTests
             if (! app.IsValueCreated)
             {
                 ApplicationManager newInstance = new ApplicationManager();
+                newInstance.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
                 newInstance.Navigator.GoToHomePage();
                 app.Value = newInstance;
             }

@@ -18,6 +18,7 @@ namespace WebAddressbookTests
 
         public ContactHelper(ApplicationManager manager) : base(manager) { }
 
+
         public ContactHelper Modify(int v, ContactsData newData)
         {
             manager.Navigator.GoToHomePage();
@@ -73,15 +74,12 @@ namespace WebAddressbookTests
         public ContactHelper FillContactForm(ContactsData contact)
         {
             Type(By.Name("firstname"), contact.Firstname);
-            Type(By.Name("lastname"), contact.Lastname);
-            Type(By.Name("title"), "title");
-            Type(By.Name("company"), "company");
+            Type(By.Name("lastname"), contact.Lastname);         
             Type(By.Name("address"), "address");
             Type(By.Name("home"), "home");
             Type(By.Name("mobile"), "mobile");
             Type(By.Name("work"), "work");
             Type(By.Name("email"), "email");
-            Type(By.Name("homepage"), "homepage");
             return this;
         }
         public ContactHelper SubmitContactCreation()
@@ -166,6 +164,86 @@ namespace WebAddressbookTests
         public int GetContactsCount()
         {
             return driver.FindElements(By.CssSelector("[name='entry']")).Count;
+        }
+
+
+        public ContactsData GetContactInformationFromTable(int index)
+        {
+            manager.Navigator.GoToHomePage();
+            IList <IWebElement> cells = driver.FindElements(By.Name("entry"))[index].FindElements(By.TagName("td"));
+            string lastName = cells[1].Text;
+            string firstName = cells[2].Text;
+            string address = cells[3].Text;
+            string allEmails = cells[4].Text;
+            string allPhones = cells[5].Text;
+
+            return new ContactsData(firstName, lastName)
+            {
+                Address = address,
+                AllPhones = allPhones,
+                AllEmails = allEmails
+            };
+        }
+
+
+
+        public ContactsData GetContactInformationFromEditForm(int index)
+        {
+            manager.Navigator.GoToHomePage();
+            InitContactModification(1);
+            string firstName = driver.FindElement(By.Name("firstname")).GetAttribute("value");
+            string lastName = driver.FindElement(By.Name("lastname")).GetAttribute("value");
+            string address = driver.FindElement(By.Name("address")).GetAttribute("value");
+            string homePhone = driver.FindElement(By.Name("home")).GetAttribute("value");
+            string mobilePhone = driver.FindElement(By.Name("mobile")).GetAttribute("value");
+            string workPhone = driver.FindElement(By.Name("work")).GetAttribute("value");
+            string email = driver.FindElement(By.Name("email")).GetAttribute("value");
+            string email2 = driver.FindElement(By.Name("email2")).GetAttribute("value"); 
+            string email3 = driver.FindElement(By.Name("email3")).GetAttribute("value");
+
+            return new ContactsData(firstName, lastName)
+            {
+                Address = address,
+                HomePhone = homePhone,
+                MobilePhone = mobilePhone,
+                WorkPhone = workPhone,
+                Email = email,
+                Email2 = email2,
+                Email3 = email3
+            };
+        }
+
+        public ContactsData GetContactDetailsInformationFromTable(int index)
+        {
+            manager.Navigator.GoToHomePage();
+            driver.FindElement(By.XPath("//*[@id='maintable']/tbody/tr[" + (index + 2) + "]/td[7]/a")).Click();
+
+           // string fullname = driver.FindElement(By.XPath("//*[@id='content']/b")).Text;
+
+            string content = driver.FindElement(By.XPath("//*[@id='content']")).Text;
+            var items = content.Split(new string[]{"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+
+            var phonesep = new string[] { ": " };
+            string fullname = items[0];
+            string address = items[1];
+            string homePhone = items[2].Split(phonesep, StringSplitOptions.RemoveEmptyEntries)[1];
+            string mobilePhone = items[3].Split(phonesep, StringSplitOptions.RemoveEmptyEntries)[1];
+            string workPhone = items[4].Split(phonesep, StringSplitOptions.RemoveEmptyEntries)[1];
+            string email = items[5];
+            string email2 = items[6];
+            string email3 = items[7];
+          
+            return new ContactsData()
+            {
+                FullName = fullname,
+                Address = address,
+                HomePhone = homePhone,
+                MobilePhone = mobilePhone,
+                WorkPhone = workPhone,
+                Email = email,
+                Email2 = email2,
+                Email3 = email3
+            };
         }
     }
 }

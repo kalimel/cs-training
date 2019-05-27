@@ -27,7 +27,7 @@ namespace WebAddressbookTests
                 if (fullName != null) { return fullName; }
                 else
                 {
-                    return Firstname + " " + Lastname;
+                    return (Firstname + " " + Lastname).Trim();
                 }
 
             }
@@ -71,13 +71,85 @@ namespace WebAddressbookTests
                 if (allEmails != null) { return allEmails; }
                 else
                 {
-                    return Email + Email2 + Email3.Trim();
+                    return Email + "\r\n" + Email2 + "\r\n" + Email3.Trim();
                 }
 
             }
             set
             {
                 allEmails = value;
+            }
+        }
+
+        public string Details
+        {
+            get
+            {
+                string rn = "\r\n";
+
+                var groups = new List<string>();
+                var parts = new List<string>();
+
+                if (FullName != "")
+                {
+                    parts.Add(FullName);
+                }
+
+                if (Address != "")
+                {
+                    parts.Add(Address);
+                }
+
+                if (parts.Count > 0)
+                {
+                    groups.Add(String.Join(rn, parts));
+                }
+
+                parts.Clear();
+
+                if (HomePhone != "")
+                {
+                    parts.Add("H: " + HomePhone);
+                }
+
+                if (MobilePhone != "")
+                {
+                    parts.Add("M: " + MobilePhone);
+                }
+
+                if (WorkPhone != "")
+                {
+                    parts.Add("W: " + WorkPhone);
+                }
+
+                if (parts.Count > 0)
+                {
+                    groups.Add(String.Join(rn, parts));
+                }
+                parts.Clear();
+
+                if (Email != "")
+                {
+                    parts.Add(Email);
+                }
+
+                if (Email2 != "")
+                {
+                    parts.Add(Email2);
+                }
+
+                if (Email3 != "")
+                {
+                    parts.Add(Email3);
+                }
+
+
+                if (parts.Count > 0)
+                {
+                    groups.Add(String.Join(rn, parts));
+                }
+
+                return String.Join(rn + rn, groups);
             }
         }
 

@@ -213,37 +213,11 @@ namespace WebAddressbookTests
             };
         }
 
-        public ContactsData GetContactDetailsInformationFromTable(int index)
+        public string GetContactDetailsInformationFromDetailsPage(int index)
         {
             manager.Navigator.GoToHomePage();
             driver.FindElement(By.XPath("//*[@id='maintable']/tbody/tr[" + (index + 2) + "]/td[7]/a")).Click();
-
-           // string fullname = driver.FindElement(By.XPath("//*[@id='content']/b")).Text;
-
-            string content = driver.FindElement(By.XPath("//*[@id='content']")).Text;
-            var items = content.Split(new string[]{"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
-
-            var phonesep = new string[] { ": " };
-            string fullname = items[0];
-            string address = items[1];
-            string homePhone = items[2].Split(phonesep, StringSplitOptions.RemoveEmptyEntries)[1];
-            string mobilePhone = items[3].Split(phonesep, StringSplitOptions.RemoveEmptyEntries)[1];
-            string workPhone = items[4].Split(phonesep, StringSplitOptions.RemoveEmptyEntries)[1];
-            string email = items[5];
-            string email2 = items[6];
-            string email3 = items[7];
-          
-            return new ContactsData()
-            {
-                FullName = fullname,
-                Address = address,
-                HomePhone = homePhone,
-                MobilePhone = mobilePhone,
-                WorkPhone = workPhone,
-                Email = email,
-                Email2 = email2,
-                Email3 = email3
-            };
+            return driver.FindElement(By.XPath("//*[@id='content']")).Text;
         }
     }
 }

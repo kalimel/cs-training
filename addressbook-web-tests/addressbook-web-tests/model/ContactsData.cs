@@ -71,7 +71,7 @@ namespace WebAddressbookTests
                 if (allEmails != null) { return allEmails; }
                 else
                 {
-                    return Email + "\r\n" + Email2 + "\r\n" + Email3.Trim();
+                    return CleanUpEmail(Email) + CleanUpEmail(Email2) + CleanUpEmail(Email3).Trim();
                 }
 
             }
@@ -160,6 +160,16 @@ namespace WebAddressbookTests
                 return "";
             }
             return Regex.Replace(phone, "[ -()]", "") + "\r\n";
+        }
+
+        private string CleanUpEmail(string email)
+        {
+            if (email == null || email == "")
+            {
+                return "";
+            }
+
+            return email + "\r\n";
         }
 
         public string Id { get; set; }

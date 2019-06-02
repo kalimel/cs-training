@@ -16,9 +16,10 @@ namespace addressbook_test_data_generators
     {
         static void Main(string[] args)
         {
-            if (args.Length < 4)
+            int a = 4;
+            if (args.Length < a)
             {
-                Console.WriteLine("3 arguments required: AMOUNT FILENAME FORMAT(excel, csv, json, xml)");
+                Console.WriteLine(String.Format("${0} arguments required: dataType FILENAME FORMAT(excel, csv, json, xml) count", a));
                 Console.ReadKey();
                 return;
             }
@@ -96,7 +97,7 @@ namespace addressbook_test_data_generators
 
             if (format == "excel")
             {
-                writeGroupsToExelFile(groups, filename);
+                writeGroupsToExcelFile(groups, filename);
             }
             else
             {
@@ -141,7 +142,7 @@ namespace addressbook_test_data_generators
             writer.Write(JsonConvert.SerializeObject(groups, Newtonsoft.Json.Formatting.Indented));
         }
 
-        static void writeGroupsToExelFile(List<GroupData> groups, string filename)
+        static void writeGroupsToExcelFile(List<GroupData> groups, string filename)
         {
             Excel.Application app = new Excel.Application();
             app.Visible = true;

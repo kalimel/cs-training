@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using WebAddressbookTests;
 using NUnit.Framework;
 using System.Text;
+using System.IO;
 
 namespace WebAddressbookTests
 {
@@ -18,16 +19,35 @@ namespace WebAddressbookTests
             app = ApplicationManager.GetInstance();
         }
 
-        public static Random rnd = new Random();
+        public static string absPathToFile(string fileName)
+        {
+            return AppDomain.CurrentDomain.BaseDirectory + fileName;
+        }
+
         public static string GenerateRandomString(int max)
         {
-            int l = Convert.ToInt32(rnd.NextDouble() * max);
             StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < l; i++)
+            char ch;
+
+            for (int i = 0; i < max; i++)
             {
-                builder.Append(Convert.ToChar(32 + Convert.ToInt32(rnd.NextDouble() * 65)));
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * rnd.NextDouble() + 65)));
+                builder.Append(ch);
             }
+
             return builder.ToString();
         }
+
+        public static Random rnd = new Random();
+        //public static string GenerateRandomString(int max)
+        //{
+        //    int l = Convert.ToInt32(rnd.NextDouble() * max);
+        //    StringBuilder builder = new StringBuilder();
+        //    for (int i = 0; i < l; i++)
+        //    {
+        //        builder.Append(Convert.ToChar(32 + Convert.ToInt32(rnd.NextDouble() * 65)));
+        //    }
+        //    return builder.ToString();
+        //}
     }
 }

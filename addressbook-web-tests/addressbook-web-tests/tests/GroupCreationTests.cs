@@ -29,7 +29,7 @@ namespace WebAddressbookTests
         public static IEnumerable<GroupData> GroupDataFromCsvFile()
         {
 	        List<GroupData> groups = new List<GroupData>();
-	        string[] lines = File.ReadAllLines(@"groups.csv");
+	        string[] lines = File.ReadAllLines(absPathToFile(@"groups.csv"));
 	        foreach (string l in lines)
 	        {
 		        string[] parts = l.Split(',');
@@ -41,21 +41,22 @@ namespace WebAddressbookTests
         public static IEnumerable<GroupData> GroupDataFromXmlFile()
         {
             List<GroupData> groups = new List<GroupData>();
-            return (List<GroupData>)new XmlSerializer(typeof(List<GroupData>)).Deserialize(new StreamReader(@"groups.xml"));
+            return (List<GroupData>)new XmlSerializer(typeof(List<GroupData>)).Deserialize(new StreamReader(absPathToFile(@"groups.xml")));
         }
 
 
         public static IEnumerable<GroupData> GroupDataFromJsonFile()
         {
             return JsonConvert.DeserializeObject<List<GroupData>>(
-                File.ReadAllText(@""));
+                File.ReadAllText(absPathToFile(@"groups.json"))
+                );
         }
 
         public static IEnumerable<GroupData> GroupDataFromExcelFile()
         {
             List<GroupData> groups = new List<GroupData>();
             Excel.Application app = new Excel.Application();
-            Excel.Workbook wb = app.Workbooks.Open(Path.Combine(Directory.GetCurrentDirectory(), @"groups.xlsx"));
+            Excel.Workbook wb = app.Workbooks.Open(absPathToFile(@"groups.xlsx"));
             Excel.Worksheet sheet = wb.ActiveSheet;
             Excel.Range range = sheet.UsedRange;
             for (int i = 1; i <= range.Rows.Count; i++)
@@ -74,7 +75,7 @@ namespace WebAddressbookTests
         }
 
 
-        [Test, TestCaseSource("GroupDataFromCsvFile")]
+        [Test, TestCaseSource("GroupDataFromJsonFile")]
 
 
         public void GroupCreationTest(GroupData group)

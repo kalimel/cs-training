@@ -24,6 +24,7 @@ namespace WebAddressbookTests
             manager.Auth.LogOut();
             return this;
         }
+
         public GroupHelper CreateWhithoutLogOut(GroupData group)
         {
             manager.Navigator.GoToGroupsPage();
@@ -37,6 +38,15 @@ namespace WebAddressbookTests
         {
             manager.Navigator.GoToGroupsPage();
             return IsElementPresent(By.ClassName("group"));
+        }
+
+        public GroupHelper Remove(GroupData group)
+        {
+            manager.Navigator.GoToGroupsPage();
+            SelectGroup(group.Id);
+            RemoveGroup();
+            manager.Navigator.GoToGroupsPage();
+            return this;
         }
 
         public GroupHelper Remove(int v)
@@ -54,6 +64,17 @@ namespace WebAddressbookTests
             SelectGroup(v);
             InitGroupModification();
             FillGroupForm(newData);
+            SubmitGroupModification();
+            manager.Navigator.GoToGroupsPage();
+            return this;
+        }
+
+        public GroupHelper Modify(GroupData oldGroup, GroupData newGroup)
+        {
+            manager.Navigator.GoToGroupsPage();
+            SelectGroup(oldGroup.Id);
+            InitGroupModification();
+            FillGroupForm(newGroup);
             SubmitGroupModification();
             manager.Navigator.GoToGroupsPage();
             return this;
@@ -85,6 +106,12 @@ namespace WebAddressbookTests
         public GroupHelper SelectGroup(int index)
         {
             driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (index + 1) + "]")).Click();
+            return this;
+        }
+
+        public GroupHelper SelectGroup(String id)
+        {
+            driver.FindElement(By.XPath("(//input[@name='selected[]' and @value='" + id + "'])")).Click();
             return this;
         }
 

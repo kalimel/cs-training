@@ -9,6 +9,7 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
+using System.Threading;
 
 namespace WebAddressbookTests
 {
@@ -23,6 +24,16 @@ namespace WebAddressbookTests
         {
             manager.Navigator.GoToHomePage();
             InitContactModification(v);
+            FillContactForm(newData);
+            SubmitContactModification();
+            manager.Navigator.GoToHomePage();
+            return this;
+        }
+
+        public ContactHelper Modify(ContactsData oldContact, ContactsData newData)
+        {
+            manager.Navigator.GoToHomePage();
+            InitContactModification(oldContact);
             FillContactForm(newData);
             SubmitContactModification();
             manager.Navigator.GoToHomePage();
@@ -66,6 +77,17 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public ContactHelper Remove(ContactsData contact)
+        {
+            manager.Navigator.GoToHomePage();
+            SelectContact(contact);
+            RemoveContact();
+            Thread.Sleep(800);
+            driver.FindElement(By.CssSelector("div.msgbox"));
+            manager.Navigator.GoToHomePage();
+            return this;
+        }
+
         public ContactHelper AddNewContact()
         {
             driver.FindElement(By.LinkText("add new")).Click();
@@ -96,6 +118,14 @@ namespace WebAddressbookTests
             checkbox.Click();
             return this;
         }
+
+        public ContactHelper SelectContact(ContactsData contact)
+        {
+            var checkbox = driver.FindElement(By.Id(contact.Id));
+            checkbox.Click();
+            return this;
+        }
+
         public ContactHelper SubmitContactModification()
         {
             driver.FindElement(By.Name("update")).Click();
@@ -106,6 +136,17 @@ namespace WebAddressbookTests
         public ContactHelper InitContactModification(int v)
         {
             driver.FindElement(By.XPath("//*[@id='maintable']/tbody/tr[" + (v+1) + "]/td[8]/a")).Click();
+            return this;
+        }
+
+        public ContactHelper InitContactModification(ContactsData contact)
+        {
+            var checkBox = driver.FindElement(By.Id(contact.Id));
+            var td = checkBox.FindElement(By.XPath(".."));
+            var tr = td.FindElement(By.XPath(".."));
+            var tds = tr.FindElements(By.TagName("td"));
+            var editTd = tds[7];
+            editTd.FindElement(By.TagName("a")).Click();
             return this;
         }
 

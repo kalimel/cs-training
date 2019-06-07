@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class GroupModificationTests : AuthTestBase
+    public class GroupModificationTests : GroupTestBase
     {
         [Test]
         public void GroupModificationTest()
@@ -19,23 +19,24 @@ namespace WebAddressbookTests
                 app.Groups.CreateWhithoutLogOut(new GroupData("g_name", "g_header", "g_footer"));
             }
 
-            GroupData newData = new GroupData("nameee", "headerr", "footerr");
+            GroupData newGroup = new GroupData("nameee", "headerr", "footerr");
 
-            List<GroupData> oldGroups = app.Groups.GetGroupList();
-            GroupData oldData = oldGroups[0];
-            app.Groups.Modify(0, newData);
+            List<GroupData> oldGroups = GroupData.GetAll();
+            GroupData oldGroup = oldGroups[0];
+            app.Groups.Modify(oldGroup, newGroup);
             Assert.AreEqual(oldGroups.Count, app.Groups.GetGroupCount());
-            List<GroupData> newGroups = app.Groups.GetGroupList();
-            oldGroups[0].Name = newData.Name;
+
+            List<GroupData> newGroups = GroupData.GetAll();
+            oldGroups[0].Name = newGroup.Name;
             oldGroups.Sort();
             newGroups.Sort();
             Assert.AreEqual(oldGroups, newGroups);
 
             foreach (GroupData group in newGroups)
             {
-                if (group.Id == oldData.Id)
+                if (group.Id == oldGroup.Id)
                 {
-                    Assert.AreEqual(newData.Name, group.Name);
+                    Assert.AreEqual(newGroup.Name, group.Name);
                 }
             }
         }

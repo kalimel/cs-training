@@ -122,5 +122,15 @@ namespace WebAddressbookTests
             System.Console.Out.WriteLine("Groups DB amount: " + fromDB.Count);
 
         }
+
+        [Test]
+        public void DBConnectivityRelationTest()
+        {
+            foreach (ContactsData contact in GroupData.GetAll()[0].GetContacts())
+            {
+                System.Console.Out.WriteLine(contact);
+            }
+
+        }
     }
 }

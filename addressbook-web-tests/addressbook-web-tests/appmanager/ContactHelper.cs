@@ -40,6 +40,49 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public ContactHelper AddContactToGroup(ContactsData contact, GroupData group)
+        {
+            manager.Navigator.GoToHomePage();
+            ClearGroupFilter();
+            SelectContact(contact);
+            SelectGroupToAdd(group.Name);
+            CommitAddingContactToGroup();
+            waitForMsgBox();
+
+            return this;
+        }
+
+        public ContactHelper RemoveContactFromGroup(ContactsData contact, GroupData group)
+        {
+            manager.Navigator.GoToHomePage();
+            SelectGroupFilter(group);
+            SelectContact(contact);
+            CommitRemovalContactFromGroup();
+            waitForMsgBox();
+
+            return this;
+        }
+
+        private void CommitAddingContactToGroup()
+        {
+            driver.FindElement(By.Name("add")).Click();
+        }
+
+        private void CommitRemovalContactFromGroup()
+        {
+            driver.FindElement(By.Name("remove")).Click();
+        }
+
+        private void ClearGroupFilter()
+        {
+            new SelectElement(driver.FindElement(By.Name("group"))).SelectByText("[all]");
+        }
+
+        private void SelectGroupFilter(GroupData group)
+        {
+            new SelectElement(driver.FindElement(By.Name("group"))).SelectByText(group.Name);
+        }
+
         public bool HasContacts()
         {
             manager.Navigator.GoToHomePage();
@@ -82,8 +125,7 @@ namespace WebAddressbookTests
             manager.Navigator.GoToHomePage();
             SelectContact(contact);
             RemoveContact();
-            Thread.Sleep(800);
-            driver.FindElement(By.CssSelector("div.msgbox"));
+            waitForMsgBox();
             manager.Navigator.GoToHomePage();
             return this;
         }
@@ -123,6 +165,12 @@ namespace WebAddressbookTests
         {
             var checkbox = driver.FindElement(By.Id(contact.Id));
             checkbox.Click();
+            return this;
+        }
+
+        public ContactHelper SelectGroupToAdd(string groupName)
+        {
+            new SelectElement(driver.FindElement(By.Name("to_group"))).SelectByText(groupName);
             return this;
         }
 
@@ -259,6 +307,12 @@ namespace WebAddressbookTests
             manager.Navigator.GoToHomePage();
             driver.FindElement(By.XPath("//*[@id='maintable']/tbody/tr[" + (index + 2) + "]/td[7]/a")).Click();
             return driver.FindElement(By.XPath("//*[@id='content']")).Text;
+        }
+
+        private void waitForMsgBox(int seconds = 10)
+        {
+            new WebDriverWait(driver, TimeSpan.FromSeconds(seconds))
+                .Until(d => d.FindElements(By.CssSelector("div.msgbox")).Count > 0);
         }
     }
 }

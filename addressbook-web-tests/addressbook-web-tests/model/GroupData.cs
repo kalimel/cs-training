@@ -37,11 +37,18 @@ namespace WebAddressbookTests
         [Column(Name = "group_id"), PrimaryKey, Identity]
         public string Id { get; set; }
 
+        [Column(Name = "deprecated")]
+        public string Deprecated { get; set; }
+
         public static List<GroupData> GetAll()
         {
             using (AddressBookDB db = new AddressBookDB())
             {
-                return (from g in db.Groups select g).ToList();
+                return (
+                    from g in db.Groups
+                    where g.Deprecated == "0000-00-00 00:00:00"
+                    select g
+                    ).ToList();
             }
         }
 
@@ -75,6 +82,14 @@ namespace WebAddressbookTests
                 return 1;
             }
             return Name.CompareTo(other.Name);   
+        }
+        public List<ContactsData> GetContacts()
+        {
+            using(AddressBookDB db = new AddressBookDB())
+            {
+                return (from c in db.Contacts
+                        from gsr in db.GCR.Where(p => p.GroupId == Id && p.ContactId == c.Id)select c).Distinct().ToList();
+            }
         }
 
     }

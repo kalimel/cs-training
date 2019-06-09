@@ -12,10 +12,27 @@ namespace WebAddressbookTests
         [Test]
         public void TestAddingContactToGroup()
         {
+            if (!app.Contacts.HasContacts())
+            {
+                app.Contacts.CreateWhithoutLogOut(new ContactsData("namemmm12", "lastnamemmm33"));
+            }
+
+            if (!app.Groups.HasGroups())
+            {
+                app.Groups.CreateWhithoutLogOut(new GroupData("g_name", "g_header", "g_footer"));
+            }
+
             GroupData group = GroupData.GetAll()[0];
             List<ContactsData> oldContacts = group.GetContacts();
 
-            ContactsData contact = ContactsData.GetAll().Except(oldContacts).First();
+            ContactsData contact = ContactsData.getRandomContactExceptExcluded(oldContacts);
+
+            if (contact == null)
+            {
+                app.Contacts.CreateWhithoutLogOut(new ContactsData("namemmm57", "lastnamemmm86"));
+                contact = ContactsData.getRandomContactExceptExcluded(oldContacts);
+            }
+
             app.Contacts.AddContactToGroup(contact, group);
 
             List<ContactsData> newContacts = group.GetContacts();

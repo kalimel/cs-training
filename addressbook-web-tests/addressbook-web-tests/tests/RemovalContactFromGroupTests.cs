@@ -13,20 +13,29 @@ namespace WebAddressbookTests
         [Test]
         public void TestRemovingContactFromGroup()
         {
+            if (!app.Contacts.HasContacts())
+            {
+                app.Contacts.CreateWhithoutLogOut(new ContactsData("namemmm79", "lastnamemmm222"));
+            }
+
+            if (!app.Groups.HasGroups())
+            {
+                app.Groups.CreateWhithoutLogOut(new GroupData("g_name", "g_header", "g_footer"));
+            }
+
             GroupData group = GroupData.GetAll()[0];
             List<ContactsData> oldContacts = group.GetContacts();
-            List<ContactsData> allContacts = ContactsData.GetAll();
             ContactsData contact = null;
 
             if (oldContacts.Count == 0)
             {
+                List<ContactsData> allContacts = ContactsData.GetAll();
                 contact = allContacts[0];
                 app.Contacts.AddContactToGroup(allContacts[0], group);
             } else
             {
                 contact = oldContacts.First();
             }
-
 
             app.Contacts.RemoveContactFromGroup(contact, group);
 

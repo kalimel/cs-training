@@ -86,6 +86,18 @@ namespace WebAddressbookTests
             }
         }
 
+        public static ContactsData getRandomContactExceptExcluded(List<ContactsData> excluded)
+        {
+            try
+            {
+                ContactsData contact = ContactsData.GetAll().Except(excluded).First();
+                return contact;
+            }
+            catch (InvalidOperationException ex) {}
+
+            return null;
+        }
+
         public string AllPhones
         {
             get

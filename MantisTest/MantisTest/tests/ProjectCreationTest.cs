@@ -11,11 +11,11 @@ namespace MantisTest
         [Test]
         public void TestProjectCreation()
         {
-            List<ProjectData> oldProjects = app.ProjectHelper.GetProjects();
+            List<ProjectData> oldProjects = app.ProjectHelper.GetProjectsAPI(account);
             ProjectData newProject = new ProjectData(GenerateRandomString(10));
 
-            app.ProjectHelper.CreateProject(newProject);
-            List<ProjectData> freshProjects = app.ProjectHelper.GetProjects();
+            app.ProjectHelper.CreateProjectAPI(account, newProject);
+            List<ProjectData> freshProjects = app.ProjectHelper.GetProjectsAPI(account);
 
             oldProjects.Sort();
             freshProjects.Sort();

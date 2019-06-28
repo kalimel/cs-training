@@ -8,22 +8,20 @@ namespace MantisTest
     [TestFixture]
     public class ProjectRemovalTest : AuthTestBase
     {
-
-
         [Test]
         public void TestProjectRemoval()
         {
-            if (!app.ProjectHelper.HasProjects())
+            if (!app.ProjectHelper.HasProjectsAPI(account))
             {
-                app.ProjectHelper.CreateProject(new ProjectData(GenerateRandomString(15)));
+                app.ProjectHelper.CreateProjectAPI(account, new ProjectData(GenerateRandomString(15)));
             }
 
-            List<ProjectData> oldProjects = app.ProjectHelper.GetProjects();
+            List<ProjectData> oldProjects = app.ProjectHelper.GetProjectsAPI(account);
             ProjectData projectToRemove = oldProjects[0];
 
             app.ProjectHelper.RemoveProject(projectToRemove);
 
-            List<ProjectData> freshProjects = app.ProjectHelper.GetProjects();
+            List<ProjectData> freshProjects = app.ProjectHelper.GetProjectsAPI(account);
 
             Assert.AreEqual(oldProjects.Count - 1, freshProjects.Count);
 

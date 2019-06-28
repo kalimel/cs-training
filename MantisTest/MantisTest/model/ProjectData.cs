@@ -10,7 +10,7 @@ namespace MantisTest
     {
         private string name;
 
-        public ProjectData() {}
+        public ProjectData() { }
         public ProjectData(string name)
         {
             this.name = name;
@@ -21,6 +21,10 @@ namespace MantisTest
             get
             {
                 return this.name;
+            }
+            set
+            {
+                this.name = value;
             }
         }
 

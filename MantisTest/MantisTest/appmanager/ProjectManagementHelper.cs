@@ -31,6 +31,11 @@ namespace MantisTest
             return projects;            
         }
 
+        public List<ProjectData> GetProjectsAPI(AccountData data)
+        {
+            return manager.API.GetAllProjects(data);
+        }
+
         public void RemoveProject(ProjectData project)
         {
             OpenProjectEditPage(project);
@@ -53,12 +58,22 @@ namespace MantisTest
             return rows.Count > 0;
         }
 
+        public bool HasProjectsAPI(AccountData data)
+        {
+            return manager.API.HasProjects(data);
+        }
+
         public void CreateProject(ProjectData project)
         {
             NavigateToProjectsPage();
             OpenCreationPage();
             FillProjectsForm(project);
             SubmitCreationForm();
+        }
+
+        public void CreateProjectAPI(AccountData data, ProjectData project)
+        {
+            manager.API.CreateNewProject(data, project);
         }
 
         public void SubmitCreationForm()

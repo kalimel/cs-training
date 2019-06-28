@@ -10,6 +10,7 @@ namespace MantisTest
     {
         private string name;
 
+        public ProjectData() {}
         public ProjectData(string name)
         {
             this.name = name;
@@ -22,6 +23,8 @@ namespace MantisTest
                 return this.name;
             }
         }
+
+        public string Id { get; set; }
 
         public int CompareTo(ProjectData other)
         {

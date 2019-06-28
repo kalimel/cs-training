@@ -12,11 +12,13 @@ namespace MantisTest
     {
         protected ApplicationManager app;
         public static Random rnd = new Random();
+        protected AccountData account;
 
         [SetUp]
         public void SetupApplicationManager()
         {
             app = ApplicationManager.GetInstance();
+            account = new AccountData("administrator", "root");
         }
 
         public static string GenerateRandomString(int max)
@@ -32,5 +34,6 @@ namespace MantisTest
 
             return builder.ToString();
         }
+
     }
 }
